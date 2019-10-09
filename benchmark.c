@@ -11,7 +11,7 @@
 
 long get_time_nanos() {
 	struct timespec ts;
-	timespec_get(&ts, TIME_UTC);
+	assert(clock_gettime(CLOCK_MONOTONIC, &ts) == 0);
 	return (long)ts.tv_sec * 1000000000L + ts.tv_nsec;
 }
 

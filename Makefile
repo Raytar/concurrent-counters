@@ -9,7 +9,7 @@ TARG = benchmark
 # specify compiler, compile flags, and needed libs
 CC   = gcc
 OPTS = -Wall -Werror
-LIBS = -pthread
+LIBS = -pthread -lrt
 
 # this translates .c files in src list to .o’s
 OBJS = $(SRCS:.c=.o)
