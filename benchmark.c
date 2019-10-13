@@ -86,12 +86,15 @@ void iteration_approx_counter(int n) {
 	long num_cpus = get_num_cpus();
 	approx_counter_t c;
 	pthread_t threads[num_cpus];
+	approx_counter_thread_arg_t args[num_cpus];
 
 	assert(approx_counter_init(&c, 1024, num_cpus) == 0);
 
 	for (int i = 0; i < num_cpus; i++) {
-		approx_counter_thread_arg_t args = {n, i, &c};
-		assert(pthread_create(&threads[i], NULL, approx_counter_thread, (void *)(&args)) == 0);
+		args[i].n = n;
+		args[i].thread_id = i;
+		args[i].c = &c;
+		assert(pthread_create(&threads[i], NULL, approx_counter_thread, (void *)(&args[i])) == 0);
 	}
 	
 	for (int i = 0; i < num_cpus; i++) {
