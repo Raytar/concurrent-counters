@@ -5,15 +5,19 @@ int approx_counter_init(approx_counter_t *c, int threshold, int num_threads) {
 	c->global_value = 0;
 	c->threshold = threshold;
 	c->num_threads = num_threads;
+
 	c->local_values = calloc(num_threads, sizeof(int));
 	if (!c->local_values) return -1;
+
 	c->local_locks = malloc(sizeof(pthread_mutex_t) * num_threads);
 	if (!c->local_locks) return -1;
+
 	// initialize locks
 	int rc = pthread_mutex_init(&c->global_lock, NULL);
 	for (int i = 0; i < num_threads; i++) {
 		rc = pthread_mutex_init(&c->local_locks[i], NULL);
 	}
+	
 	if (rc) return -1;
 	return 0;
 }
@@ -71,14 +75,18 @@ int approx_counter_flush(approx_counter_t *c) {
 	int rc = 0;
 	rc = pthread_mutex_lock(&c->global_lock);
 	if (rc) return -1;
+
 	for (int i = 0; i < c->num_threads; i++) {
 		rc = pthread_mutex_lock(&c->local_locks[i]);
 		if (rc) goto unlock_global;
+
 		c->global_value += c->local_values[i];
 		c->local_values[i] = 0;
+
 		rc = pthread_mutex_unlock(&c->local_locks[i]);
 		if (rc) goto unlock_global;
 	}
+
 unlock_global:
 	rc = pthread_mutex_unlock(&c->global_lock);
 	return rc;

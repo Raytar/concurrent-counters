@@ -105,6 +105,8 @@ void iteration_approx_counter(int n) {
 	assert(approx_counter_destroy(&c) == 0);
 }
 
+// run the 'iteration' function with parameter 'n', 'iterations' times with the name 'bench_name'
+// measures the average time taken from running 'iteration(n)' 'iterations' times.
 void benchmark(int iterations, int n, void (*iteration)(int), char *bench_name) {
 	long totaltime = 0;
 	long start_time;
