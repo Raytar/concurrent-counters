@@ -50,8 +50,8 @@ void iteration_safe_counter(int n) {
 
 	assert(safe_counter_init(&c) == 0);
 
+	safe_counter_thread_arg_t args = {n, &c};
 	for (int i = 0; i < num_cpus; i++) {
-		safe_counter_thread_arg_t args = {n, &c};
 		assert(pthread_create(&threads[i], NULL, safe_counter_thread, (void *)(&args)) == 0);
 	}
 	
